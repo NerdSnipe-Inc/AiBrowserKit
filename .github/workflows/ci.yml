@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_integration:
+        description: Run live WKWebView / network integration tests
+        type: boolean
+        default: false
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: self-hosted
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Contributor policy
+        run: bash scripts/ci-test.sh policy
+      - name: Run unit tests
+        run: bash scripts/ci-test.sh unit
+
+  integration-tests:
+    name: Integration tests
+    runs-on: self-hosted
+    timeout-minutes: 45
+    if: >-
+      github.event_name == 'workflow_dispatch' && inputs.run_integration ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run integration tests
+        run: bash scripts/ci-test.sh integration

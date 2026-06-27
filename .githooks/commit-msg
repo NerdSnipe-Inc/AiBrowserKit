@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Strip Cursor co-author trailers injected by IDE tooling.
+set -euo pipefail
+msg_file="${1:?commit-msg hook requires path to message file}"
+tmp="$(mktemp)"
+grep -v -E '^Co-authored-by:[[:space:]]*Cursor|^Co-authored-by:.*cursoragent@cursor\.com' "$msg_file" > "$tmp"
+# Remove trailing blank lines left after stripping trailers
+sed -i '' -e '${/^$/d;}' "$tmp" 2>/dev/null || sed -i -e '${/^$/d;}' "$tmp"
+mv "$tmp" "$msg_file"
