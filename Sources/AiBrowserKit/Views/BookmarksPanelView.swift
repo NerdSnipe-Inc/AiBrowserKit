@@ -30,12 +30,16 @@ public struct BookmarksPanelView: View {
     // Which drop target is currently highlighted (folderID or "__unfiled__")
     @State private var highlightedTarget: String?
 
+    /// Creates the bookmarks side panel.
+    ///
+    /// - Parameter onNavigate: Callback invoked when a bookmark is selected.
     public init(onNavigate: @escaping (URL) -> Void) {
         self.onNavigate = onNavigate
     }
 
     private var service: BookmarkService { browserEnv.bookmarks }
 
+    /// Renders folders, bookmark rows, and folder management controls.
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             panelHeader

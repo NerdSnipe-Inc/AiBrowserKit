@@ -5,9 +5,13 @@ import WebKit
 /// Interactive drag-to-select overlay for capturing a region of the web view.
 /// Shows a dimmed mask with the selected rectangle cut out.
 public struct ScreenshotSelectionOverlay: View {
+    /// Web view to snapshot.
     let webView: WKWebView
+    /// Output destination for the captured image.
     let destination: ScreenshotDestination
+    /// Optional URL associated with the capture.
     let sourceURL: String?
+    /// Callback invoked after capture completes or the flow is cancelled.
     let onDismiss: () -> Void
 
     @Environment(BrowserEnvironment.self) private var browserEnv
@@ -15,6 +19,13 @@ public struct ScreenshotSelectionOverlay: View {
     @State private var currentPoint: CGPoint = .zero
     @State private var isDragging = false
 
+    /// Creates an interactive selection overlay.
+    ///
+    /// - Parameters:
+    ///   - webView: Web view to capture.
+    ///   - destination: Capture destination.
+    ///   - sourceURL: Optional URL associated with the captured content.
+    ///   - onDismiss: Callback invoked when the overlay exits.
     public init(
         webView: WKWebView,
         destination: ScreenshotDestination,
@@ -36,6 +47,7 @@ public struct ScreenshotSelectionOverlay: View {
         )
     }
 
+    /// Renders the drag-selection overlay and capture affordances.
     public var body: some View {
         GeometryReader { geo in
             ZStack {

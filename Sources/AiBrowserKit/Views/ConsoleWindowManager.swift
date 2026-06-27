@@ -5,13 +5,18 @@ import AppKit
 /// Manages a single detached console log panel window.
 @MainActor
 public final class ConsoleWindowManager {
+    /// Shared singleton instance for console panel lifecycle.
     public static let shared = ConsoleWindowManager()
     private var windowController: NSWindowController?
 
     private init() {}
 
+    /// Whether the detached console window is currently visible.
     public var isOpen: Bool { windowController?.window?.isVisible == true }
 
+    /// Toggles the detached console window.
+    ///
+    /// - Parameter store: Console store displayed in the panel.
     public func toggle(store: ConsoleLogStore) {
         if isOpen {
             windowController?.close()

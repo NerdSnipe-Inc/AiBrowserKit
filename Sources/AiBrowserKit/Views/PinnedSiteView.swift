@@ -5,6 +5,7 @@ import WebKit
 /// Full-height view for a pinned site, shown when the user selects it in the sidebar.
 /// Uses PinnedSiteWebViewCache so the page persists when switching sidebar items.
 public struct PinnedSiteView: View {
+    /// Pinned-site model being presented.
     public let site: PinnedSite
     @Environment(BrowserEnvironment.self) private var browserEnv
 
@@ -13,6 +14,9 @@ public struct PinnedSiteView: View {
     @State private var showDeleteConfirmation = false
     @State private var showEditSheet = false
 
+    /// Creates a pinned-site content view.
+    ///
+    /// - Parameter site: Pinned-site model to render.
     public init(site: PinnedSite) {
         self.site = site
     }
@@ -23,6 +27,7 @@ public struct PinnedSiteView: View {
     private var state: WebViewState { cached.state }
     private var webView: WKWebView { cached.webView }
 
+    /// Renders navigation controls and cached web content for a pinned site.
     public var body: some View {
         VStack(spacing: 0) {
             navBar

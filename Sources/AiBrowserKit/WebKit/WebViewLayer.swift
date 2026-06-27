@@ -9,9 +9,22 @@ import UIKit
 // MARK: - ScreenshotDestination
 
 #if canImport(AppKit)
-public enum ScreenshotDestination: Sendable { case clipboard, file, hostClipboard }
+/// Destination for screenshot capture output.
+public enum ScreenshotDestination: Sendable {
+    /// Copy the screenshot to the system clipboard.
+    case clipboard
+    /// Prompt for a location and save as PNG.
+    case file
+    /// Send the screenshot to host-app clipboard integration.
+    case hostClipboard
+}
 
 @MainActor
+/// Delivers a captured image to the selected destination.
+///
+/// - Parameters:
+///   - image: Captured screenshot image.
+///   - destination: Output destination for the image.
 public func deliverScreenshot(_ image: NSImage, to destination: ScreenshotDestination) {
     switch destination {
     case .clipboard:
@@ -35,11 +48,13 @@ public func deliverScreenshot(_ image: NSImage, to destination: ScreenshotDestin
 
 // MARK: - WebViewThemeOverride
 
+/// Theme override modes supported by AiBrowserKit web views.
 public enum WebViewThemeOverride: String, Sendable {
     case system
     case light
     case dark
 
+    /// Next theme mode in the user-facing cycle.
     public var next: WebViewThemeOverride {
         switch self {
         case .system: .light
@@ -48,6 +63,7 @@ public enum WebViewThemeOverride: String, Sendable {
         }
     }
 
+    /// SF Symbol used for the mode toggle button.
     public var icon: String {
         switch self {
         case .system: "circle.lefthalf.filled"
@@ -56,6 +72,7 @@ public enum WebViewThemeOverride: String, Sendable {
         }
     }
 
+    /// User-facing label for the current mode.
     public var label: String {
         switch self {
         case .system: "Follow system"
@@ -65,6 +82,7 @@ public enum WebViewThemeOverride: String, Sendable {
     }
 
     #if canImport(AppKit)
+    /// AppKit appearance mapped from the selected override.
     public var nsAppearance: NSAppearance? {
         switch self {
         case .system: nil
@@ -81,17 +99,28 @@ public enum WebViewThemeOverride: String, Sendable {
 @MainActor
 @Observable
 public final class WebViewState {
+    /// Current top-level page URL.
     public var currentURL: URL?
+    /// Current page title as reported by WebKit.
     public var pageTitle: String = ""
+    /// Indicates whether navigation is in progress.
     public var isLoading: Bool = false
+    /// Estimated load progress in the range `0...1`.
     public var estimatedProgress: Double = 0
+    /// Whether back navigation is currently possible.
     public var canGoBack: Bool = false
+    /// Whether forward navigation is currently possible.
     public var canGoForward: Bool = false
+    /// Whether the current top-level URL uses HTTPS.
     public var isSecure: Bool = false
+    /// Whether all loaded resources are secure.
     public var hasOnlySecureContent: Bool = false
+    /// Last navigation error message, when present.
     public var error: String?
+    /// Theme override currently selected for the web view.
     public var themeOverride: WebViewThemeOverride = .system
 
+    /// Creates empty web view state.
     public init() {}
 }
 
@@ -100,6 +129,7 @@ public final class WebViewState {
 /// Shared WebKit configuration for all in-app web views.
 @MainActor
 public enum WebViewStore {
+    /// Shared website data store used by all web views.
     public static let dataStore = WKWebsiteDataStore.default()
 
     #if canImport(AppKit)
@@ -110,6 +140,9 @@ public enum WebViewStore {
     public static let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
     #endif
 
+    /// Creates the canonical WebKit configuration for AiBrowserKit web views.
+    ///
+    /// - Returns: A configured `WKWebViewConfiguration`.
     public static func makeConfiguration() -> WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.websiteDataStore = dataStore
@@ -129,25 +162,39 @@ public enum WebViewStore {
 // MARK: - WebViewRepresentable
 
 #if canImport(AppKit)
+/// SwiftUI bridge for embedding a `WKWebView` on AppKit platforms.
 public struct WebViewRepresentable: NSViewRepresentable {
+    /// Backing web view instance to present.
     public let webView: WKWebView
 
+    /// Creates a representable wrapper for a specific web view.
+    ///
+    /// - Parameter webView: Web view to expose to SwiftUI.
     public init(webView: WKWebView) {
         self.webView = webView
     }
 
+    /// Returns the existing `WKWebView` for SwiftUI.
     public func makeNSView(context: Context) -> WKWebView { webView }
+    /// No-op update; state is driven directly by the shared `WKWebView`.
     public func updateNSView(_ nsView: WKWebView, context: Context) {}
 }
 #else
+/// SwiftUI bridge for embedding a `WKWebView` on UIKit platforms.
 public struct WebViewRepresentable: UIViewRepresentable {
+    /// Backing web view instance to present.
     public let webView: WKWebView
 
+    /// Creates a representable wrapper for a specific web view.
+    ///
+    /// - Parameter webView: Web view to expose to SwiftUI.
     public init(webView: WKWebView) {
         self.webView = webView
     }
 
+    /// Returns the existing `WKWebView` for SwiftUI.
     public func makeUIView(context: Context) -> WKWebView { webView }
+    /// No-op update; state is driven directly by the shared `WKWebView`.
     public func updateUIView(_ uiView: WKWebView, context: Context) {}
 }
 #endif
@@ -173,6 +220,12 @@ private let consoleInterceptScript = """
 
 @MainActor
 public enum WebViewFactory {
+    /// Builds and wires a `WKWebView` with shared configuration and delegates.
+    ///
+    /// - Parameters:
+    ///   - state: Observable state sink for navigation updates.
+    ///   - consoleStore: Optional sink for intercepted JavaScript console events.
+    /// - Returns: A fully configured `WKWebView`.
     public static func makeWebView(state: WebViewState, consoleStore: ConsoleLogStore? = nil) -> WKWebView {
         let config = WebViewStore.makeConfiguration()
 
@@ -212,7 +265,9 @@ public enum WebViewFactory {
 // MARK: - WebViewCoordinator
 
 @MainActor
+/// Adapts WebKit delegate callbacks into observable `WebViewState` updates.
 public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
+    /// Runtime key for associating the coordinator with a web view instance.
     nonisolated(unsafe) public static var associatedKey: UInt8 = 0
 
     private let state: WebViewState
@@ -256,6 +311,7 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
 
     // MARK: - WKScriptMessageHandler
 
+    /// Receives JavaScript console messages bridged from injected page scripts.
     nonisolated public func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
@@ -276,6 +332,7 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
 
     // MARK: - WKNavigationDelegate
 
+    /// Handles popup/tab navigation actions by redirecting into the same view.
     nonisolated public func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction
@@ -291,11 +348,13 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
         return .allow
     }
 
+    /// Persists navigation errors into observable web view state.
     nonisolated public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         let message = error.localizedDescription
         MainActor.assumeIsolated { self.state.error = message }
     }
 
+    /// Persists provisional navigation errors except expected cancellation noise.
     nonisolated public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         let nsError = error as NSError
         if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled { return }
@@ -303,12 +362,14 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
         MainActor.assumeIsolated { self.state.error = message }
     }
 
+    /// Clears error state once navigation succeeds.
     nonisolated public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         MainActor.assumeIsolated { self.state.error = nil }
     }
 
     // MARK: - WKUIDelegate
 
+    /// Handles requests to open a new window by loading the URL in-place.
     nonisolated public func webView(
         _ webView: WKWebView,
         createWebViewWith configuration: WKWebViewConfiguration,
@@ -323,6 +384,7 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
         return nil
     }
 
+    /// Presents a native alert UI for `window.alert`.
     nonisolated public func webView(
         _ webView: WKWebView,
         runJavaScriptAlertPanelWithMessage message: String,
@@ -347,6 +409,7 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
         #endif
     }
 
+    /// Presents a native confirmation UI for `window.confirm`.
     nonisolated public func webView(
         _ webView: WKWebView,
         runJavaScriptConfirmPanelWithMessage message: String,
@@ -373,6 +436,7 @@ public final class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDeleg
         #endif
     }
 
+    /// Presents a native text prompt UI for `window.prompt`.
     nonisolated public func webView(
         _ webView: WKWebView,
         runJavaScriptTextInputPanelWithPrompt prompt: String,

@@ -8,6 +8,9 @@ public final class FaviconService {
     private let cacheDir: URL
     private var memoryCache: [String: NSImage] = [:]
 
+    /// Creates a favicon service rooted at the given storage directory.
+    ///
+    /// - Parameter storageDirectory: Optional base directory for cache files.
     public init(storageDirectory: URL? = nil) {
         let dir = AiBrowserStorage.directory(custom: storageDirectory)
         self.cacheDir = dir.appendingPathComponent("favicons", isDirectory: true)
@@ -19,6 +22,10 @@ public final class FaviconService {
 
     // MARK: - Public API
 
+    /// Returns a cached favicon image for an item if available.
+    ///
+    /// - Parameter itemID: Stable identifier of the owning bookmark or pinned site.
+    /// - Returns: Cached image from memory or disk.
     public func cachedImage(for itemID: String) -> NSImage? {
         if let mem = memoryCache[itemID] { return mem }
         let path = cacheDir.appendingPathComponent("\(itemID).png")
@@ -28,6 +35,15 @@ public final class FaviconService {
         return image
     }
 
+    /// Attempts to download and cache a favicon for a URL.
+    ///
+    /// The service tries direct `/favicon.ico`, then Google S2 fallback,
+    /// then HTTP fallback for HTTPS hosts.
+    ///
+    /// - Parameters:
+    ///   - urlString: Page URL used to derive the favicon host.
+    ///   - itemID: Cache key used for both memory and disk storage.
+    /// - Returns: Downloaded favicon image if successful.
     public func fetchFavicon(for urlString: String, itemID: String) async -> NSImage? {
         guard let baseURL = URL(string: urlString),
               let host = baseURL.host() else { return nil }
@@ -53,6 +69,9 @@ public final class FaviconService {
         return nil
     }
 
+    /// Removes cached favicon data from memory and disk.
+    ///
+    /// - Parameter itemID: Cache key to evict.
     public func evict(itemID: String) {
         memoryCache.removeValue(forKey: itemID)
         let path = cacheDir.appendingPathComponent("\(itemID).png")

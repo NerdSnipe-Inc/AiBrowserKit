@@ -2,8 +2,10 @@ import SwiftUI
 
 /// Landing page shown on new/empty browser tabs.
 public struct BrowserNewTabView: View {
+    /// Creates the default new-tab landing view.
     public init() {}
 
+    /// Renders the new-tab placeholder content.
     public var body: some View {
         VStack(spacing: 0) {
             Spacer()

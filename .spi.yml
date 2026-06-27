@@ -1,7 +1,10 @@
 version: 1
+metadata:
+  authors:
+    - NerdSnipe
 builder:
   configs:
     - platform: macos-spm
       target: AiBrowserKit
     - documentation_targets:
-        - AiBrowserKit
+      - AiBrowserKit

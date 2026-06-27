@@ -10,10 +10,12 @@ public struct BrowserView: View {
     @State private var selectionDestination: ScreenshotDestination?
     @State private var showConsole = false
 
+    /// Creates the top-level browser view.
     public init() {}
 
     private var viewModel: BrowserViewModel { browserEnv.browserVM }
 
+    /// Renders tab chrome, navigation controls, and web content.
     public var body: some View {
         VStack(spacing: 0) {
             // Tab bar

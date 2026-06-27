@@ -6,6 +6,11 @@ public struct BookmarkBarView: View {
     let service: BookmarkService
     let onNavigate: (URL) -> Void
 
+    /// Creates the horizontal bookmark bar.
+    ///
+    /// - Parameters:
+    ///   - service: Bookmark service providing folders and items.
+    ///   - onNavigate: Callback invoked when a bookmark is selected.
     public init(service: BookmarkService, onNavigate: @escaping (URL) -> Void) {
         self.service = service
         self.onNavigate = onNavigate
@@ -14,6 +19,7 @@ public struct BookmarkBarView: View {
     private var unfiledBookmarks: [BrowserBookmark] { service.bookmarks(inFolder: nil) }
     private var folders: [BookmarkFolder] { service.sortedFolders }
 
+    /// Renders unfiled bookmarks and folder menus.
     public var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 2) {

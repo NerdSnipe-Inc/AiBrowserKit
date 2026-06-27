@@ -6,13 +6,19 @@ public struct PinnedSiteEditorSheet: View {
     @Environment(BrowserEnvironment.self) private var browserEnv
     @Environment(\.dismiss) private var dismiss
 
+    /// Determines whether the sheet is creating or editing a site.
     public enum Mode {
+        /// Creates a new pinned site.
         case add
+        /// Edits an existing pinned site.
         case edit(PinnedSite)
     }
 
+    /// Current editor mode.
     public let mode: Mode
+    /// Default name used when opening the sheet in add mode.
     public var initialName: String = ""
+    /// Default URL used when opening the sheet in add mode.
     public var initialURL: String = ""
 
     @State private var name: String = ""
@@ -30,6 +36,12 @@ public struct PinnedSiteEditorSheet: View {
     @State private var isFetchingFavicon: Bool = false
     private let previewItemID = UUID().uuidString
 
+    /// Creates the pinned-site editor sheet.
+    ///
+    /// - Parameters:
+    ///   - mode: Add or edit mode.
+    ///   - initialName: Default name in add mode.
+    ///   - initialURL: Default URL in add mode.
     public init(mode: Mode, initialName: String = "", initialURL: String = "") {
         self.mode = mode
         self.initialName = initialName
@@ -60,6 +72,7 @@ public struct PinnedSiteEditorSheet: View {
         return s
     }
 
+    /// Renders pinned-site fields, icon picker, and save actions.
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Header

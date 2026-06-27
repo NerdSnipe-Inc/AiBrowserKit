@@ -1,9 +1,13 @@
 import SwiftUI
 
+/// Displays captured JavaScript console output with filtering controls.
 public struct ConsoleLogView: View {
     let store: ConsoleLogStore
     @State private var filter: ConsoleLevel? = nil
 
+    /// Creates a console log view bound to a store.
+    ///
+    /// - Parameter store: Source of console entries to display.
     public init(store: ConsoleLogStore) {
         self.store = store
     }
@@ -13,6 +17,7 @@ public struct ConsoleLogView: View {
         return store.entries.filter { $0.level == f }
     }
 
+    /// Renders filter chips and the console entry list.
     public var body: some View {
         VStack(spacing: 0) {
             toolbar

@@ -16,6 +16,16 @@ public struct BrowserNavigationBar: View {
     @State private var isEditing: Bool = false
     @FocusState private var urlFieldFocused: Bool
 
+    /// Creates the browser navigation bar for a specific tab.
+    ///
+    /// - Parameters:
+    ///   - tab: Active tab model to control.
+    ///   - onAddToPinned: Optional callback for pinning the current page.
+    ///   - onToggleBookmarks: Optional callback for bookmark panel visibility.
+    ///   - onToggleConsole: Optional callback for console panel visibility.
+    ///   - onStartSelection: Optional callback to start area screenshot selection.
+    ///   - showingBookmarks: Whether bookmarks panel is currently visible.
+    ///   - showingConsole: Whether console panel is currently visible.
     public init(
         tab: BrowserTab,
         onAddToPinned: (() -> Void)? = nil,
@@ -38,6 +48,7 @@ public struct BrowserNavigationBar: View {
         browserEnv.bookmarks.isBookmarked(url: tab.state.currentURL)
     }
 
+    /// Renders navigation controls, address field, and page action buttons.
     public var body: some View {
         HStack(spacing: 8) {
             // Back / Forward

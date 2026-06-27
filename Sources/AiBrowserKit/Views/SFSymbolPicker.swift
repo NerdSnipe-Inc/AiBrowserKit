@@ -2,9 +2,13 @@ import SwiftUI
 
 /// Searchable SF Symbol grid picker.
 public struct SFSymbolPicker: View {
+    /// Binding to the currently selected SF Symbol name.
     @Binding public var selectedSymbol: String
     @State private var searchText: String = ""
 
+    /// Creates an SF Symbol picker bound to a selected symbol name.
+    ///
+    /// - Parameter selectedSymbol: Binding that receives the picked symbol.
     public init(selectedSymbol: Binding<String>) {
         _selectedSymbol = selectedSymbol
     }
@@ -15,6 +19,7 @@ public struct SFSymbolPicker: View {
         return SFSymbolList.all.filter { $0.contains(query) }
     }
 
+    /// Renders search, symbol grid, and current selection summary.
     public var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 6) {
@@ -90,6 +95,7 @@ public struct SFSymbolPicker: View {
 // MARK: - SF Symbol Name List
 
 public enum SFSymbolList {
+    /// Curated set of SF Symbol names offered by `SFSymbolPicker`.
     public static let all: [String] = [
         "globe", "globe.americas", "globe.europe.africa", "globe.asia.australia",
         "network", "wifi", "antenna.radiowaves.left.and.right",
