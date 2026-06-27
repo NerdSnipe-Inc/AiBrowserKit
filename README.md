@@ -1,5 +1,8 @@
 # AiBrowserKit
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FNerdSnipe-Inc%2FAiBrowserKit%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/NerdSnipe-Inc/AiBrowserKit)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FNerdSnipe-Inc%2FAiBrowserKit%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/NerdSnipe-Inc/AiBrowserKit)
+
 SwiftUI + WKWebView browser components for **macOS agent applications**. Embed a full multi-tab browser panel, pinned-site sidebar, bookmarks, JS console capture, and screenshot tooling — or pull in the WebKit primitives alone and build custom chrome around your own automation bridge.
 
 **Platforms:** macOS 26+ (full UI) · iOS 17+ / visionOS 1+ (WebKit building blocks only)  
@@ -349,4 +352,4 @@ Host apps that embed a custom browser panel should add their own integration tes
 
 ## License
 
-Copyright © NerdSnipe Inc. All rights reserved.
+MIT — see [LICENSE](LICENSE).
