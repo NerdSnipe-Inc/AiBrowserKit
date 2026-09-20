@@ -183,8 +183,6 @@ public final class BookmarkService {
         let dir = bookmarksURL.deletingLastPathComponent()
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let lines = bookmarks.compactMap { b -> String? in
-            guard let data = try? encoder.encode(b) else { return nil }
-            // Encode as compact single-line JSON for JSONL
             let compact = JSONEncoder()
             guard let d = try? compact.encode(b) else { return nil }
             return String(data: d, encoding: .utf8)
