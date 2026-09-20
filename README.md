@@ -1,5 +1,11 @@
 # AiBrowserKit
 
+![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange?logo=swift)
+![iOS 17+](https://img.shields.io/badge/iOS-17%2B-blue?logo=apple)
+![macOS 26+](https://img.shields.io/badge/macOS-26%2B-blue?logo=apple)
+![visionOS 1+](https://img.shields.io/badge/visionOS-1%2B-blue?logo=apple)
+![MIT License](https://img.shields.io/badge/license-MIT-green)
+![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FNerdSnipe-Inc%2FAiBrowserKit%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/NerdSnipe-Inc/AiBrowserKit)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FNerdSnipe-Inc%2FAiBrowserKit%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/NerdSnipe-Inc/AiBrowserKit)
 
