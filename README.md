@@ -17,6 +17,10 @@ SwiftUI + WKWebView browser components for **macOS agent applications**. Embed a
 
 ---
 
+[![Sponsor NerdSnipe-Inc](https://img.shields.io/badge/Sponsor-NerdSnipe--Inc-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/NerdSnipe-Inc)
+
+> AiBrowserKit is free and open source. If it saved you time, [sponsoring NerdSnipe Inc](https://github.com/sponsors/NerdSnipe-Inc) pays for the maintenance, bug fixes and new releases that keep it working.
+
 ## Features
 
 | Feature | Description |
@@ -265,8 +269,8 @@ Sources/AiBrowserKit/
 ├── Environment/     BrowserEnvironment, AiBrowserClipboardContent
 ├── Models/          BrowserTab, BrowserBookmark, PinnedSite, ConsoleEntry, …
 ├── ViewModels/      BrowserViewModel, PinnedSiteStore
-├── Services/        BookmarkService, FaviconService, PinnedSiteWebViewCache
-├── Utilities/       BrowserURLResolver, AiBrowserStorage
+├── Services/        BookmarkService, FaviconService, PinnedSiteWebViewCache, AiBrowserStorage
+├── Utilities/       BrowserURLResolver
 ├── WebKit/          WebViewFactory, WebViewState, StealthScript
 └── Views/           BrowserView, BookmarkBarView, ConsoleLogView, …
 
@@ -359,3 +363,10 @@ Host apps that embed a custom browser panel should add their own integration tes
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Support this project
+
+AiBrowserKit is built and maintained by [NerdSnipe Inc](https://nerdsnipe.cc), a small independent studio in Ottawa. Sponsorship funds keeping up with each new WebKit and OS release.
+
+- [Sponsor on GitHub](https://github.com/sponsors/NerdSnipe-Inc), from $5/month or a one-time amount
+- [More about what we fund](https://nerdsnipe.cc/sponsor)
